@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#264c3b" />
+    <title>Dị thường — Cộng đồng quan sát & thảo luận</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Đến nội dung chính</a>
+    <header class="header">
+      <a href="#forum" class="brand" aria-label="Dị thường, trang chủ"
+        ><span class="brand-mark">đ<span>✦</span></span
+        ><span>Dị thường<small>QUAN SÁT · CHIA SẺ · TÌM HIỂU</small></span></a
+      >
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a href="#forum" data-nav="forum">Diễn đàn</a>
+        <a href="#map" data-nav="map">Bản đồ</a>
+        <a href="#saved" data-nav="saved">Đã lưu</a>
+      </nav>
+      <div class="header-actions">
+        <span class="prototype-label">BẢN THỬ</span
+        ><button
+          class="avatar mine"
+          data-action="profile"
+          aria-label="Tài khoản mẫu Minh Anh"
+        >
+          MA
+        </button>
+      </div>
+    </header>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar" aria-label="Nhóm hiện tượng"></aside>
+      <main id="main" tabindex="-1"></main>
+      <aside
+        class="rightbar"
+        id="rightbar"
+        aria-label="Thông tin cộng đồng"
+      ></aside>
+    </div>
+    <div class="modal-backdrop" id="modal-root" hidden></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <footer class="mobile-create">
+      <button class="button primary" data-action="create">
+        ＋ Tạo nội dung
+      </button>
+    </footer>
+  </body>
+</html>
