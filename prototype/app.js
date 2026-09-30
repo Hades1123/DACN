@@ -300,8 +300,11 @@ const mediaHTML = (m) =>
   `<div class="attachment">${mediaURLs.has(m.key) && m.type.startsWith("image/") ? `<img src="${esc(mediaURLs.get(m.key))}" alt="Ảnh đính kèm ${esc(m.name)}">` : icon("file")}<div>${esc(m.name)}<small>${esc(m.origin || (mediaURLs.has(m.key) ? "Tệp được chọn trong phiên này" : "Chỉ lưu tên tệp trong bản thử"))}</small></div></div>`;
 
 function renderSidebar() {
+  const sidebarCategory = route().startsWith("thread/")
+    ? thread(route().split("/")[1])?.category || category
+    : category;
   document.querySelector("#sidebar").innerHTML =
-    `<p class="side-label">KHÁM PHÁ CỘNG ĐỒNG</p>${categories.map((c) => `<button class="side-item ${category === c.id ? "active" : ""}" data-category="${c.id}">${icon(c.icon)}<span>${c.label}</span><span class="count">${state.threads.filter((t) => c.id === "all" || t.category === c.id).length}</span></button>`).join("")}<hr><div class="sidebar-extra"><p class="side-label">KHÔNG GIAN CỦA BẠN</p><a class="side-item" href="#saved">${icon("bookmark")}Chủ đề đã lưu<span class="count">${state.saved.length}</span></a><a class="side-item" href="#followed">${icon("bell")}Đang theo dõi<span class="count">${state.followed.length}</span></a></div><hr><button class="button primary wide" data-action="create">${icon("plus")}Tạo nội dung</button><p class="side-note">Một quan sát đáng ghi lại.<br>Một câu hỏi đáng cùng tìm hiểu.</p><div class="sidebar-extra sidebar-footer">Dữ liệu minh họa · Prototype v1<br><button class="text-button" data-action="about">Về bản thử này</button> · <button class="text-button" data-action="reset">Đặt lại dữ liệu</button></div>`;
+    `<section class="member-panel"><span class="avatar mine">MA</span><strong>Minh Anh</strong><small>Thành viên cộng đồng</small><div class="member-panel-footer">${icon("bookmark")} ${state.saved.length} chủ đề đã lưu</div></section><p class="side-label">KHÁM PHÁ CỘNG ĐỒNG</p>${categories.map((c) => `<button class="side-item ${sidebarCategory === c.id ? "active" : ""}" data-category="${c.id}">${icon(c.icon)}<span>${c.label}</span><span class="count">${state.threads.filter((t) => c.id === "all" || t.category === c.id).length}</span></button>`).join("")}<hr><div class="sidebar-extra"><p class="side-label">KHÔNG GIAN CỦA BẠN</p><a class="side-item" href="#saved">${icon("bookmark")}Chủ đề đã lưu<span class="count">${state.saved.length}</span></a><a class="side-item" href="#followed">${icon("bell")}Đang theo dõi<span class="count">${state.followed.length}</span></a></div><hr><button class="button primary wide" data-action="create">${icon("plus")}Tạo nội dung</button><p class="side-note">Một quan sát đáng ghi lại.<br>Một câu hỏi đáng cùng tìm hiểu.</p><div class="sidebar-extra sidebar-footer">Dữ liệu minh họa · Prototype v1<br><button class="text-button" data-action="about">Về bản thử này</button> · <button class="text-button" data-action="reset">Đặt lại dữ liệu</button></div>`;
 }
 function renderRightbar(t) {
   document.querySelector("#rightbar").innerHTML = t
@@ -326,7 +329,21 @@ function guideHTML() {
 function topicRow(t) {
   return `<article class="topic-row ${t.isNew ? "new" : ""}"><a href="#thread/${t.id}" class="topic-symbol ${t.type}" aria-label="Mở ${esc(t.title)}">${icon(t.type === "report" ? cat(t.category).icon : "message")}</a><div class="topic-content"><div class="topic-tags"><span class="pill ${t.type}">${t.type === "report" ? "Báo cáo" : "Thảo luận"}</span><span class="pill">${esc(t.kind)}</span>${t.pinned ? `<span class="pill pin">✦ Đáng chú ý</span>` : ""}${t.links?.length ? `<span class="pill">${t.links.length} báo cáo liên kết</span>` : ""}</div><a href="#thread/${t.id}" class="topic-title">${esc(t.title)}</a><p class="topic-excerpt">${esc(t.body)}</p><div class="topic-meta"><span class="avatar mini-avatar">${esc(initials(t.author))}</span><span>${esc(t.author)}</span><span>·</span><span>${esc(t.time)}</span>${t.type === "report" ? `<span>·</span>${icon("pin")}<span>${esc(t.location)}</span>` : ""}</div></div><div class="topic-counts"><span title="Số trả lời">${icon("message")}${t.replies.length}</span><span class="views" title="Lượt xem minh họa">${icon("eye")}${t.views}</span><span class="last">Cập nhật<br>${esc(t.time)}</span></div></article>`;
 }
+function forumBanner() {
+  if (!["all", "sky", "mystery"].includes(category)) return "";
+  const mystery = category === "mystery";
+  const heading = mystery
+    ? "Những câu chuyện kỳ bí.<br>Cùng tìm hiểu từ quan sát."
+    : category === "sky"
+      ? "Bạn thấy gì trên bầu trời?<br>Cùng ghi lại và đối chiếu."
+      : "Chưa biết là gì?<br>Bắt đầu từ điều bạn thấy.";
+  const description = mystery
+    ? "Chia sẻ trải nghiệm, đặt câu hỏi và trao đổi những cách giải thích có thể kiểm tra."
+    : "Chia sẻ quan sát có cấu trúc, đối chiếu bằng chứng và cùng đặt những câu hỏi tốt hơn.";
+  return `<section class="hero hero-photo ${mystery ? "hero-mystery" : "hero-sky"}"><img class="hero-image" src="assets/${mystery ? "bg-2.png" : "bg-1.png"}" alt="" width="1672" height="941" fetchpriority="high" decoding="async"><div class="hero-copy"><p class="eyebrow">${mystery ? "TÂM LINH / KỲ BÍ" : "TỪ MỘT QUAN SÁT ĐẾN MỘT CUỘC TRAO ĐỔI"}</p><h2>${heading}</h2><p>${description}</p><button class="text-button hero-link" data-action="create">Chia sẻ quan sát của bạn ${icon("arrow")}</button></div></section>`;
+}
 function renderForum() {
+  document.body.dataset.realm = category === "mystery" ? "mystery" : "sky";
   const savedView = route() === "saved",
     followedView = route() === "followed";
   const filtered = state.threads.filter(
@@ -349,7 +366,7 @@ function renderForum() {
         ? "Diễn đàn cộng đồng"
         : cat(category).label;
   document.querySelector("#main").innerHTML =
-    `<div class="page-heading"><div><p class="eyebrow">KHÔNG GIAN CỦA NHỮNG CÂU HỎI</p><h1>${title}</h1><p>Ghi lại điều bạn thấy. Cùng tìm hiểu điều chưa rõ.</p></div><button class="button primary" data-action="create">${icon("plus")}Tạo nội dung</button></div>${!savedView && !followedView && category === "all" && !search ? `<section class="hero"><div class="hero-copy"><p class="eyebrow">TỪ MỘT QUAN SÁT ĐẾN MỘT CUỘC TRAO ĐỔI</p><h2>Chưa biết là gì?<br>Bắt đầu từ điều bạn thấy.</h2><p>Chia sẻ quan sát có cấu trúc, đối chiếu bằng chứng và cùng đặt những câu hỏi tốt hơn.</p><button class="text-button hero-link" data-action="create">Chia sẻ quan sát đầu tiên ${icon("arrow")}</button></div><div class="orbit"></div><div class="planet"></div><span class="star">✦</span><span class="orbit-dot"></span></section>` : ""}<div class="toolbar"><div class="tabs" aria-label="Loại nội dung">${[
+    `<div class="page-heading"><div><p class="eyebrow">KHÔNG GIAN CỦA NHỮNG CÂU HỎI</p><h1>${title}</h1><p>Ghi lại điều bạn thấy. Cùng tìm hiểu điều chưa rõ.</p></div><button class="button primary" data-action="create">${icon("plus")}Tạo nội dung</button></div>${!savedView && !followedView && !search ? forumBanner() : ""}<div class="toolbar"><div class="tabs" aria-label="Loại nội dung">${[
       ["all", "Mới cập nhật"],
       ["report", "Báo cáo"],
       ["discussion", "Thảo luận"],
@@ -401,6 +418,7 @@ function replyHTML(r, i, t) {
   return `<article class="card reply" id="reply-${r.id}"><div class="reply-header"><span class="avatar ${r.author === "Minh Anh" ? "mine" : ""}">${esc(initials(r.author))}</span><div><strong>${esc(r.author)}</strong>${r.author === t.author ? '<span class="pill" style="margin-left:6px">Tác giả</span>' : ""}<small>${esc(r.time)}</small></div><a class="reply-number" href="#reply-${r.id}">#${i + 1}</a></div>${r.quote ? `<blockquote>${esc(r.quote)}</blockquote>` : ""}<div class="prose">${paragraphs(r.body)}</div>${r.diagram ? `<div class="art-evidence" role="img" aria-label="Sơ đồ hướng nhìn minh họa: hai vị trí quan sát với hướng khác nhau"><svg viewBox="0 0 370 120"><path d="M0 87Q80 60 120 93T240 75T370 88" fill="none" stroke="#d7e0cc" stroke-width="22"/><path d="m90 72 95-36M233 74l52-45" stroke="#718b57" stroke-width="2" stroke-dasharray="5 4"/><circle cx="90" cy="72" r="6" fill="#486a40"/><circle cx="233" cy="74" r="6" fill="#a58952"/><text x="66" y="103" fill="#5e7552" font-size="10">#102 · Mỹ Khê</text><text x="194" y="104" fill="#8e7b55" font-size="10">#108 · Thuận Phước</text><text x="145" y="22" fill="#899779" font-size="9">Hướng theo lời kể, cần kiểm tra lại</text></svg><span class="art-label">SƠ ĐỒ MINH HỌA</span></div><div class="attachment">${icon("file")}<div>doi-chieu-huong-nhin.png<small>Hình đối chiếu · Minh họa cho prototype</small></div></div>` : ""}${(r.media || []).map(mediaHTML).join("")}<div class="reply-footer"><button class="text-button ${state.liked.includes(r.id) ? "active" : ""}" data-action="useful" data-reply="${r.id}" data-id="${t.id}">${icon("check")}Hữu ích · ${(r.useful || 0) + (state.liked.includes(r.id) ? 1 : 0)}</button><button class="text-button" data-action="quote" data-reply="${r.id}" data-id="${t.id}">${icon("quote")}Trích dẫn</button><button class="text-button" data-action="flag" data-target="${r.id}">${icon("flag")}Báo vi phạm</button></div></article>`;
 }
 function renderThread(t) {
+  document.body.dataset.realm = t?.category === "mystery" ? "mystery" : "sky";
   if (!t) {
     document.querySelector("#main").innerHTML =
       '<div class="empty"><h2>Không tìm thấy chủ đề</h2><p>Chủ đề này không có trong dữ liệu mẫu.</p><a href="#forum" class="button">Về diễn đàn</a></div>';
@@ -427,18 +445,40 @@ function mapReports() {
       (mapCategory === "all" || t.category === mapCategory),
   );
 }
-function renderMap() {
-  const reports = mapReports(),
-    danang = reports.filter((t) => t.location.includes("Đà Nẵng")),
-    others = reports.filter((t) => !danang.includes(t));
-  if (!reports.some((t) => t.id === mapSelection))
-    mapSelection = reports[0]?.id;
-  document.querySelector("#main").innerHTML =
-    `<div class="page-heading"><div><p class="eyebrow">QUAN SÁT THEO KHU VỰC</p><h1>Khám phá bản đồ</h1><p>Chỉ báo cáo có vị trí xuất hiện ở đây. Chủ đề thảo luận không tạo điểm.</p></div><button class="button primary" data-action="report">${icon("plus")}Đăng báo cáo</button></div><div class="filter-chips">${categories.map((c) => `<button class="filter-chip ${mapCategory === c.id ? "active" : ""}" data-map-category="${c.id}">${c.id === "all" ? "Tất cả báo cáo" : c.label}</button>`).join("")}</div><div class="map-surface"><svg class="map-art" viewBox="0 0 700 460" preserveAspectRatio="none" aria-hidden="true"><rect width="700" height="460" fill="#e8eee0"/><path d="M450-20c-20 80-95 95-85 173s117 82 90 141-145 55-145 196H730V-20Z" fill="#d2e4df"/><path d="M120 0q-20 160 100 218T110 460M0 110q170-40 250 40t175-50M0 315q190 30 280-70t160 85" stroke="#dae4ce" stroke-width="35" fill="none"/><path d="M80 80 350 72 300 145 410 214 348 325 242 410M45 220l180-40 60 195 155 15M150 30l50 240 140 20" stroke="#fafcf3" stroke-width="4" fill="none"/><path d="M80 80 350 72 300 145 410 214 348 325 242 410" stroke="#c6d3b4" stroke-width="1" fill="none"/><text x="530" y="250" fill="#8baaa0" font-size="15" letter-spacing="3" transform="rotate(-20 530 250)">BIỂN ĐÔNG</text></svg><span class="map-place" style="top:19%;left:43%">Hà Nội</span><span class="map-place" style="top:46%;left:63%">Đà Nẵng</span><span class="map-place" style="top:80%;left:28%">TP. Hồ Chí Minh</span>${danang.length ? `<button class="map-marker cluster ${danang.some((t) => t.id === mapSelection) ? "selected" : ""}" style="top:49%;left:59%" data-action="cluster" aria-label="Mở ${danang.length} báo cáo ở Đà Nẵng">${danang.length}</button>` : ""}${others.map((r, i) => `<button class="map-marker ${r.id === mapSelection ? "selected" : ""}" style="top:${82 - (i % 4) * 14}%;left:${37 + (i % 4) * 8}%" data-map-report="${r.id}" aria-label="Xem báo cáo ${esc(r.title)}">${icon(cat(r.category).icon)}</button>`).join("")}<div class="map-key">${icon("pin")} Vị trí người quan sát · Khu vực gần đúng</div></div><p class="map-note">Bản đồ minh họa bố cục, không theo tỷ lệ địa lý. Dữ liệu mẫu hiển thị toàn bộ, chưa kết nối dịch vụ bản đồ.</p><div class="map-preview"><div class="replies-heading"><h2>${reports.length} báo cáo trên bản đồ</h2><small>Không gộp các báo cáo</small></div>${reports.length ? `<div class="topic-list">${reports.map((t) => `<div style="${t.id === mapSelection ? "background:#edf2e4;" : ""}">${topicRow(t)}</div>`).join("")}</div>` : `<div class="card empty"><h3>Chưa có báo cáo thuộc nhóm này</h3><p>Bạn có thể đăng một quan sát để thử luồng này.</p><button class="button secondary" data-action="report">Đăng báo cáo</button></div>`}</div>`;
-  renderRightbar();
+let mapClusterZoom = null;
+function renderMapList() {
+  const list = document.querySelector("#map-report-list");
+  if (!list) return;
+  const reports = mapReports();
+  list.innerHTML = reports.length ? reports.map(t => {
+    const located = !!window.ReportMap.coordinateOf(t);
+    return `<article class="map-report-item ${t.id === mapSelection ? "selected" : ""}" data-map-item="${t.id}"><div><span class="pill report">${esc(t.kind)}</span><a href="#thread/${t.id}"><strong>${esc(t.title)}</strong></a><small>${esc(t.location)} · ${located ? "Điểm khu vực minh họa" : "Chưa chọn điểm bản đồ"}</small><a class="text-button" href="#thread/${t.id}">Mở báo cáo & thảo luận ${icon("arrow")}</a></div><button class="button secondary" data-map-report="${t.id}" ${located ? "" : "disabled"}>${icon("pin")}Định vị</button></article>`;
+  }).join("") : `<div class="card empty"><h3>Chưa có báo cáo thuộc nhóm này</h3><p>Bạn có thể đăng một quan sát để thử luồng này.</p><button class="button secondary" data-action="report">Đăng báo cáo</button></div>`;
 }
+function renderMap() {
+  document.body.dataset.realm = "sky";
+  document.body.classList.add("map-route");
+  const reports = mapReports();
+  const located = reports.filter(t => window.ReportMap.coordinateOf(t));
+  if (!reports.some(t => t.id === mapSelection)) mapSelection = reports[0]?.id;
+  document.querySelector("#main").innerHTML = `<div class="page-heading"><div><p class="eyebrow">QUAN SÁT THEO KHU VỰC</p><h1>Khám phá bản đồ</h1><p>Khám phá các báo cáo trên địa cầu, rồi zoom đến khu vực bạn quan tâm.</p></div><button class="button primary" data-action="report">${icon("plus")}Đăng báo cáo</button></div><div class="filter-chips">${categories.map(c => `<button class="filter-chip ${mapCategory === c.id ? "active" : ""}" data-map-category="${c.id}" aria-pressed="${mapCategory === c.id}">${c.id === "all" ? "Tất cả báo cáo" : c.label}</button>`).join("")}</div><div class="map-toolbar"><div class="map-mode-switch" aria-label="Góc nhìn bản đồ"><button data-map-mode="globe" class="active" aria-pressed="true">Trái Đất 3D</button><button data-map-mode="terrain" aria-pressed="false">Địa hình 3D</button><button data-map-mode="flat" aria-pressed="false">Bản đồ 2D</button></div><button class="button" data-map-command="home">${icon("map")}Về Việt Nam</button></div><div class="map-surface map-live"><div id="report-map" role="region" aria-label="Bản đồ tương tác vị trí người quan sát"></div><div class="map-key">${icon("pin")} Vị trí người quan sát · Điểm khu vực minh họa</div></div><div class="map-status" id="map-status" role="status" aria-live="polite">Đang khởi tạo bản đồ…</div><p class="map-note">${located.length} báo cáo có điểm khu vực${reports.length > located.length ? ` · ${reports.length - located.length} báo cáo chưa chọn điểm` : ""}. Cụm điểm giúp bản đồ gọn hơn; các báo cáo vẫn độc lập. Đường phố và độ cao địa hình cần mạng.</p><div class="map-preview"><div class="replies-heading"><h2>${reports.length} báo cáo phù hợp</h2><small>Không gộp các báo cáo</small></div><div id="map-report-list"></div></div>`;
+  renderMapList();
+  renderRightbar();
+  window.ReportMap.mount({
+    reports, selected: mapSelection,
+    focusId: route().split("/")[1],
+    onSelect(id) { mapSelection = id; renderMapList(); },
+    onCluster(ids, zoom) {
+      mapClusterZoom = zoom;
+      openModal(`${ids.length} báo cáo trong cụm`, `<p class="modal-intro">Gom điểm theo mức zoom; chưa khẳng định các báo cáo ghi nhận cùng một hiện tượng.</p>${ids.map(linkedReport).join("")}<div class="modal-footer"><button class="button secondary" data-map-command="zoom-cluster">Phóng to khu vực này ${icon("search")}</button></div>`);
+    },
+  });
+}
+
 function render() {
   const r = route();
+  document.body.classList.toggle("map-route", r.startsWith("map"));
+  if (!r.startsWith("map")) window.ReportMap?.unmount();
   document
     .querySelectorAll("[data-nav]")
     .forEach((a) =>
@@ -519,7 +559,7 @@ function branchFields(category) {
 function openReport() {
   openModal(
     "Đăng báo cáo hiện tượng",
-    `<p class="modal-intro">Ghi lại một lần quan sát. Báo cáo có phần trao đổi riêng và xuất hiện trên bản đồ.</p><form id="report-form"><div class="field-grid"><div class="field"><label for="form-category">Nhóm hiện tượng *</label>${categorySelect()}</div><div class="field"><label for="classification">Loại quan sát *</label><select id="classification" name="kind"><option>Đốm sáng</option><option>UFO / UAP chưa xác định</option><option>Khác / chưa xác định</option></select></div></div><div class="field"><label for="report-source">Nguồn báo cáo *</label><select id="report-source" name="source"><option>Trực tiếp quan sát</option><option>Đăng lại từ nguồn khác</option></select></div><div class="field" id="source-field" hidden><label for="report-source-detail">Người quan sát / nguồn gốc *</label><input id="report-source-detail" name="sourceURL" placeholder="Tên nguồn, liên kết hoặc lời kể có ghi người cung cấp"></div><div class="field"><label for="report-title">Tiêu đề *</label><input id="report-title" name="title" required minlength="10" maxlength="200" placeholder="Mô tả ngắn hiện tượng bạn ghi nhận"></div><div class="field"><label for="report-body">Mô tả quan sát *</label><textarea id="report-body" name="body" required minlength="30" maxlength="10000" placeholder="Bạn thấy, nghe hoặc ghi nhận điều gì? Trong hoàn cảnh nào?"></textarea></div><div class="field-grid"><div class="field"><label for="observed">Thời gian quan sát *</label><input id="observed" type="datetime-local" name="observed" required value="2026-09-30T20:00"><label style="font-weight:400;margin-top:7px;font-size:9px;display:flex;gap:6px;align-items:center"><input style="width:auto" type="checkbox" name="estimated">Thời gian ước lượng</label></div><div class="field"><label for="observer-location">Vị trí người quan sát *</label><input id="observer-location" name="location" required placeholder="Ví dụ: Sơn Trà, Đà Nẵng"><small>Nhập khu vực gần đúng. Không cần địa chỉ nhà.</small></div></div><div class="field"><label for="phenomenon-location">Vị trí hiện tượng <span class="muted">(nếu biết)</span></label><input id="phenomenon-location" name="phenomenonLocation" placeholder="Không đoán nếu bạn chưa xác định được"></div><div class="field-grid" id="branch-fields">${branchFields("sky")}</div>${uploadField()}<div class="helper">Vị trí công khai: khu vực bạn nhập. Prototype chưa thu GPS hay metadata thiết bị. Các điểm trên bản đồ chỉ minh họa.</div><div class="modal-footer"><small>Báo cáo có một luồng trả lời.<br>Không tạo sự kiện hoặc điểm tin cậy.</small><button class="button primary" type="submit">Đăng báo cáo ${icon("arrow")}</button></div></form>`,
+    `<p class="modal-intro">Ghi lại một lần quan sát. Báo cáo có phần trao đổi riêng và xuất hiện trên bản đồ.</p><form id="report-form"><div class="field-grid"><div class="field"><label for="form-category">Nhóm hiện tượng *</label>${categorySelect()}</div><div class="field"><label for="classification">Loại quan sát *</label><select id="classification" name="kind"><option>Đốm sáng</option><option>UFO / UAP chưa xác định</option><option>Khác / chưa xác định</option></select></div></div><div class="field"><label for="report-source">Nguồn báo cáo *</label><select id="report-source" name="source"><option>Trực tiếp quan sát</option><option>Đăng lại từ nguồn khác</option></select></div><div class="field" id="source-field" hidden><label for="report-source-detail">Người quan sát / nguồn gốc *</label><input id="report-source-detail" name="sourceURL" placeholder="Tên nguồn, liên kết hoặc lời kể có ghi người cung cấp"></div><div class="field"><label for="report-title">Tiêu đề *</label><input id="report-title" name="title" required minlength="10" maxlength="200" placeholder="Mô tả ngắn hiện tượng bạn ghi nhận"></div><div class="field"><label for="report-body">Mô tả quan sát *</label><textarea id="report-body" name="body" required minlength="30" maxlength="10000" placeholder="Bạn thấy, nghe hoặc ghi nhận điều gì? Trong hoàn cảnh nào?"></textarea></div><div class="field-grid"><div class="field"><label for="observed">Thời gian quan sát *</label><input id="observed" type="datetime-local" name="observed" required value="2026-09-30T20:00"><label style="font-weight:400;margin-top:7px;font-size:9px;display:flex;gap:6px;align-items:center"><input style="width:auto" type="checkbox" name="estimated">Thời gian ước lượng</label></div><div class="field"><label for="observer-location">Vị trí người quan sát *</label><input id="observer-location" name="location" required placeholder="Ví dụ: Sơn Trà, Đà Nẵng"><small>Nhập khu vực gần đúng. Không cần địa chỉ nhà.</small></div></div><div class="field"><label for="map-area">Điểm khu vực trên bản đồ <span class="muted">(tùy chọn trong bản thử)</span></label><select id="map-area" name="mapArea"><option value="">Chưa chọn điểm bản đồ</option>${Object.entries(window.ReportMap.areas).map(([key,area])=>`<option value="${key}">${area.name}</option>`).join("")}</select><small>Chọn khu vực khớp với vị trí người quan sát. Chỉ có một số điểm minh họa; chưa có tìm địa chỉ hoặc GPS.</small></div><div class="field"><label for="phenomenon-location">Vị trí hiện tượng <span class="muted">(nếu biết)</span></label><input id="phenomenon-location" name="phenomenonLocation" placeholder="Không đoán nếu bạn chưa xác định được"></div><div class="field-grid" id="branch-fields">${branchFields("sky")}</div>${uploadField()}<div class="helper">Vị trí công khai: khu vực bạn nhập và điểm đại diện nếu đã chọn. Prototype chưa thu GPS hay metadata thiết bị.</div><div class="modal-footer"><small>Báo cáo có một luồng trả lời.<br>Không tạo sự kiện hoặc điểm tin cậy.</small><button class="button primary" type="submit">Đăng báo cáo ${icon("arrow")}</button></div></form>`,
   );
 }
 function readFiles(input) {
@@ -543,7 +583,7 @@ function toggleList(key, id) {
 
 document.addEventListener("click", (e) => {
   const el = e.target.closest(
-    "[data-action],[data-category],[data-tab],[data-page],[data-map-category],[data-map-report]",
+    "[data-action],[data-category],[data-tab],[data-page],[data-map-category],[data-map-report],[data-map-mode],[data-map-command]",
   );
   if (!el) return;
   if (el.dataset.category) {
@@ -567,6 +607,16 @@ document.addEventListener("click", (e) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
+  if (el.dataset.mapMode) {
+    window.ReportMap.setMode(el.dataset.mapMode);
+    return;
+  }
+  if (el.dataset.mapCommand) {
+    if (el.dataset.mapCommand === "home") window.ReportMap.home();
+    if (el.dataset.mapCommand === "retry") window.ReportMap.retry();
+    if (el.dataset.mapCommand === "zoom-cluster") { closeModal(); mapClusterZoom?.(); }
+    return;
+  }
   if (el.dataset.mapCategory) {
     mapCategory = el.dataset.mapCategory;
     renderMap();
@@ -574,8 +624,7 @@ document.addEventListener("click", (e) => {
   }
   if (el.dataset.mapReport) {
     mapSelection = el.dataset.mapReport;
-    renderMap();
-    toast("Báo cáo được tô nền trong danh sách bên dưới.");
+    window.ReportMap.focusReport(mapSelection);
     return;
   }
   const id = el.dataset.id,
@@ -664,7 +713,7 @@ document.addEventListener("click", (e) => {
     case "about":
       openModal(
         "Về bản thử này",
-        `<div class="prose"><p>Prototype để hình dung diễn đàn cho các quan sát bất thường tại Việt Nam. Tất cả tên, báo cáo, hình ảnh và số liệu đều là dữ liệu minh họa.</p><p>Bạn có thể đăng báo cáo, mở chủ đề dẫn chiếu nhiều báo cáo, trả lời, trích dẫn, lưu và chỉnh sửa tóm tắt của chủ đề mẫu.</p><p>Dữ liệu chữ được lưu trong trình duyệt. Tệp không tải lên máy chủ; bản đồ là sơ đồ minh họa. Chưa có đăng nhập, kiểm duyệt thật, camera, GPS hoặc xác thực bằng chứng.</p></div>`,
+        `<div class="prose"><p>Prototype để hình dung diễn đàn cho các quan sát bất thường tại Việt Nam. Tất cả tên, báo cáo, hình ảnh và số liệu đều là dữ liệu minh họa.</p><p>Bạn có thể đăng báo cáo, mở chủ đề dẫn chiếu nhiều báo cáo, trả lời, trích dẫn, lưu và chỉnh sửa tóm tắt của chủ đề mẫu.</p><p>Dữ liệu chữ được lưu trong trình duyệt. Tệp không tải lên máy chủ; bản đồ dùng dữ liệu địa lý, còn điểm báo cáo là vị trí khu vực minh họa. Chưa có đăng nhập, kiểm duyệt thật, camera, GPS hoặc xác thực bằng chứng.</p></div>`,
       );
       break;
     case "reset":
@@ -776,6 +825,7 @@ document.addEventListener("submit", (e) => {
         return;
       }
       Object.assign(t, {
+        publicCoordinates: window.ReportMap.areas[data.get("mapArea")]?.coordinates,
         source: data.get("source"),
         sourceURL: data.get("sourceURL"),
         observed: data.get("observed"),

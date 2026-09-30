@@ -1,0 +1,131 @@
+/* Readable type across the forum; compact metadata stays at least 11–12px. */
+body { font-size: 15px; }
+.main-nav a { font-size: 14px; }
+.brand small { font-size: 9px; }
+.side-item { font-size: 13px; }
+.side-item .count, .side-label, .side-note, .sidebar-footer { font-size: 11px; }
+.member-panel strong { font-size: 14px; }
+.member-panel small, .member-panel-footer { font-size: 12px; }
+.button { font-size: 13px; padding: 11px 14px; }
+.page-heading p, .hero p { font-size: 13px; }
+.eyebrow, .page-heading .eyebrow, .hero .eyebrow { font-size: 10px; }
+.topic-title { font-size: 16px; }
+.topic-excerpt { font-size: 13px; }
+.topic-meta, .topic-counts, .section-meta { font-size: 12px; }
+.pill, .pill.report, .pill.discussion { font-size: 10px; }
+.tab, .search input { font-size: 13px; }
+.pagination, .page-button, .text-button { font-size: 12px; }
+.right-card h3 { font-size: 14px; }
+.right-card p, .stats small, .guide-step strong, .guide-step p { font-size: 12px; }
+.guide-step .step-number { font-size: 11px; }
+.prose p { font-size: 15px; }
+.summary p, .summary ul, .summary-heading h3 { font-size: 14px; }
+.summary .summary-foot, .scene-caption { font-size: 12px; }
+.linked-heading, .linked-report strong { font-size: 13px; }
+.linked-report small, .breadcrumb, .detail-author, .detail-author strong { font-size: 12px; }
+.reply-header strong, .attachment, .file-label { font-size: 13px; }
+.reply-header small, .attachment small, .reply-number { font-size: 12px; }
+.composer .sr-label { font-size: 12px !important; }
+.composer textarea, .field input, .field select, .field textarea { font-size: 14px; }
+.field label, .field small, .modal-intro, .modal-footer small, .helper { font-size: 12px; }
+.report-option { font-size: 12px; }
+.observation-grid dt { font-size: 12px; }
+.observation-grid dd { font-size: 14px; }
+.detail-head h1 { font-size: 28px; }
+.create-choice strong { font-size: 16px; }
+.create-choice small { font-size: 13px; }
+.right-card .button.wide { white-space: normal; }
+.topic-row { gap: 12px; }
+.topic-meta { row-gap: 7px; }
+.mini-avatar { font-size: 8px; }
+.map-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.map-mode-switch { display: flex; gap: 4px; border: 1px solid #466c7f; padding: 4px; border-radius: 5px; background: #0a1a26; }
+.map-mode-switch button { padding: 8px 12px; font-size: 13px; border: 0; border-radius: 3px; color: #b6cfde; background: transparent; }
+.map-mode-switch button.active { background: #235365; color: #acf0f8; box-shadow: inset 0 0 0 1px #69ccda70; }
+.map-toolbar .button { font-size: 12px; }
+.map-surface.map-live { height: 540px; position: relative; background: radial-gradient(ellipse at center,#123748,#050e17 75%); overflow: hidden; }
+#report-map { position: absolute; inset: 0; }
+.map-live .map-key { z-index: 3; bottom: 37px; max-width: calc(100% - 65px); font-size: 11px; pointer-events: none; }
+.map-live .map-key .icon { width: 13px; height: 13px; vertical-align: middle; }
+.map-status { padding: 11px 13px; border: 1px solid #557b8e66; border-top: 0; background: #10222fe6; color: #a9c7d7; font-size: 12px; }
+.map-status-error { color: #f1d2a5; }
+.map-note { font-size: 12px; line-height: 1.8; }
+.filter-chip { font-size: 12px; }
+.map-preview .replies-heading h2 { font-size: 18px; }
+.map-report-item { margin-bottom: 10px; border: 1px solid #42677c; border-radius: 4px; background: #101e2ce8; padding: 16px; display: flex; gap: 14px; align-items: center; }
+.map-report-item.selected { border-color: #7bdded; background: #143748; }
+.map-report-item>div { flex: 1; min-width: 0; }
+.map-report-item strong { color: #8ce4ee; display: block; font-weight: 500; font-size: 14px; line-height: 1.6; }
+.map-report-item small { display: block; font-size: 12px; margin-top: 6px; }
+.map-report-item .text-button { font-size: 12px; margin-top: 8px; }
+.geo-marker { width: 26px; height: 26px; padding: 0; display: grid; place-items: center; border: 1px solid #e4faff; border-radius: 50%; background: #0e2634; box-shadow: 0 0 0 5px #79daed18,0 2px 8px #03101966; cursor: pointer; }
+.geo-marker .geo-dot { width: 12px; height: 12px; background: var(--marker-color,#79ddec); border-radius: 50%; }
+.geo-marker.selected { box-shadow: 0 0 0 7px #79daed44; border-width: 2px; }
+.geo-cluster { width: 43px; height: 43px; background: #286579; color: #effcff; border: 2px solid #92e9f2; font-size: 15px; font-weight: 600; }
+.map-city-label { color: #c8e7f2; font-size: 12px; text-shadow: 0 1px 4px #04131e,0 1px 10px #04131e; white-space: nowrap; pointer-events: none; }
+.map-city-label[hidden] { display: none; }
+.maplibregl-canvas { outline: none; }
+.maplibregl-map { font-family: inherit; }
+.maplibregl-ctrl.maplibregl-ctrl-attrib { background: #102633e8; color: #c0d9e6; }
+.maplibregl-ctrl-group { background: #102c3b; border: 1px solid #688fa2; }
+.maplibregl-ctrl-group button { width: 34px; height: 34px; }
+.maplibregl-ctrl-group button+button { border-color: #466d81; }
+.maplibregl-ctrl-group button:hover { background: #244c60; }
+.maplibregl-ctrl-icon { filter: invert(.85); }
+.maplibregl-ctrl-attrib, .maplibregl-ctrl-attrib a { color: #b9d3e0; background-color: #102633; }
+.maplibregl-ctrl-attrib { font-size: 10px; }
+.maplibregl-ctrl-attrib-button { filter: invert(.85); }
+.maplibregl-popup-content { padding: 17px; background: #102838; border: 1px solid #76c3d5; border-radius: 5px; color: #daedf6; box-shadow: 0 8px 30px #0006; }
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: #76c3d5; }
+.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: #76c3d5; }
+.maplibregl-popup-close-button { color: #d9eff7; padding: 3px 8px; font-size: 20px; }
+.geo-popup-kind { display: block; color: #a5c6d5; font-size: 11px; margin-bottom: 7px; }
+.geo-popup-body strong { font-size: 14px; font-weight: 500; line-height: 1.7; display: block; margin-right: 10px; }
+.geo-popup-body p { font-size: 12px; color: #a6c5d5; margin-top: 7px; }
+.geo-popup-body a { display: inline-block; font-size: 12px; color: #88e3f0; margin-top: 12px; text-decoration: underline; }
+.map-unavailable { padding: 35px; display: grid; place-content: center; text-align: center; height: 100%; gap: 15px; }
+.map-unavailable p { font-size: 14px; }
+.map-route .rightbar { display: none; }
+.map-route .app-layout { grid-template-columns: 210px minmax(0,1fr); }
+@media(max-width:1180px) {
+  .map-route .app-layout { grid-template-columns: 190px minmax(0,1fr); }
+}
+@media(max-width:760px) {
+  body { font-size: 14px; }
+  .brand small { font-size: 6px; }
+  .main-nav a { font-size: 12px; }
+  .side-item { font-size: 12px; }
+  .topic-title { font-size: 15px; }
+  .topic-excerpt { font-size: 12px; max-width: none; }
+  .topic-meta { font-size: 11px; }
+  .topic-counts { font-size: 11px; }
+  .topic-tags .pill { font-size: 9px; }
+  .topic-row { padding: 17px 12px; }
+  .topic-symbol { display: none; }
+  .topic-counts { gap: 10px; }
+  .page-heading p,.hero p { font-size: 12px; }
+  .prose p { font-size: 14px; }
+  .summary p { font-size: 13px; }
+  .detail-head h1 { font-size: 25px; }
+  .composer textarea,.field input,.field select,.field textarea { font-size: 16px; }
+  .field-grid { grid-template-columns: 1fr; gap: 0; }
+  .modal-footer { flex-wrap: wrap; }
+  .modal-footer small { max-width: none; font-size: 11px; }
+  .search { max-width: none; }
+  .map-toolbar { gap: 9px; }
+  .map-mode-switch { flex: 1 0 100%; }
+  .map-mode-switch button { flex: 1; padding: 9px 7px; font-size: 12px; white-space: nowrap; }
+  .map-surface.map-live { height: 470px; }
+  .map-live .map-key { font-size: 10px; left: 9px; padding: 7px; max-width: calc(100% - 20px); }
+  .map-report-item { align-items: start; flex-wrap: wrap; padding: 14px; }
+  .map-report-item>div { flex-basis: 100%; }
+  .map-city-label { font-size: 11px; }
+  .map-route .app-layout { display: block; }
+}
+@media(max-width:380px) {
+  .brand { font-size: 16px; }
+  .brand .brand-logo { width: 30px; height: 30px; }
+  .main-nav { gap: 10px; }
+  .main-nav a { font-size: 11px; }
+  .brand small { letter-spacing: .5px; }
+}
