@@ -445,6 +445,20 @@ function mapReports() {
   );
 }
 let mapClusterZoom = null;
+let mapPanelOpen = window.innerWidth > 760;
+function setMapPanel(open) {
+  mapPanelOpen = open;
+  document.querySelector('.map-workspace')?.classList.toggle('reports-open', open);
+  const panel = document.querySelector('#map-reports-panel');
+  if (panel) panel.hidden = !open;
+  const button = document.querySelector('[data-map-command="toggle-reports"]');
+  button?.setAttribute('aria-expanded', String(open));
+}
+const mapSmallScreen = window.matchMedia('(max-width:760px)');
+mapSmallScreen.addEventListener('change', e => {
+  if (route().startsWith('map')) setMapPanel(!e.matches);
+  else mapPanelOpen = !e.matches;
+});
 function renderMapList() {
   const list = document.querySelector("#map-report-list");
   if (!list) return;
@@ -460,7 +474,7 @@ function renderMap() {
   const reports = mapReports();
   const located = reports.filter(t => window.ReportMap.coordinateOf(t));
   if (!reports.some(t => t.id === mapSelection)) mapSelection = reports[0]?.id;
-  document.querySelector("#main").innerHTML = `<div class="page-heading"><div><p class="eyebrow">QUAN SÁT THEO KHU VỰC</p><h1>Khám phá bản đồ</h1><p>Khám phá các báo cáo trên địa cầu, rồi zoom đến khu vực bạn quan tâm.</p></div><button class="button primary" data-action="report">${icon("plus")}Đăng báo cáo</button></div><div class="filter-chips">${categories.map(c => `<button class="filter-chip ${mapCategory === c.id ? "active" : ""}" data-map-category="${c.id}" aria-pressed="${mapCategory === c.id}">${c.id === "all" ? "Tất cả báo cáo" : c.label}</button>`).join("")}</div><div class="map-toolbar"><div class="map-mode-switch" aria-label="Góc nhìn bản đồ"><button data-map-mode="globe" class="active" aria-pressed="true">Trái Đất 3D</button><button data-map-mode="terrain" aria-pressed="false">Địa hình 3D</button><button data-map-mode="flat" aria-pressed="false">Bản đồ 2D</button></div><button class="button" data-map-command="home">${icon("map")}Về Việt Nam</button></div><div class="map-surface map-live"><div id="report-map" role="region" aria-label="Bản đồ tương tác vị trí người quan sát"></div><div class="map-key">${icon("pin")} Vị trí người quan sát · Điểm khu vực minh họa</div></div><div class="map-status" id="map-status" role="status" aria-live="polite">Đang khởi tạo bản đồ…</div><p class="map-note">${located.length} báo cáo có điểm khu vực${reports.length > located.length ? ` · ${reports.length - located.length} báo cáo chưa chọn điểm` : ""}. Cụm điểm giúp bản đồ gọn hơn; các báo cáo vẫn độc lập. Đường phố và độ cao địa hình cần mạng.</p><div class="map-preview"><div class="replies-heading"><h2>${reports.length} báo cáo phù hợp</h2><small>Không gộp các báo cáo</small></div><div id="map-report-list"></div></div>`;
+  document.querySelector("#main").innerHTML = `<section class="map-workspace ${mapPanelOpen ? 'reports-open' : ''}" aria-label="Khám phá bản đồ"><div class="map-surface map-live"><div id="report-map" role="region" aria-label="Bản đồ tương tác vị trí người quan sát"></div></div><button class="button map-panel-toggle" data-map-command="toggle-reports" aria-controls="map-reports-panel" aria-expanded="${mapPanelOpen}">${icon('message')}Báo cáo (${reports.length})</button><aside class="map-reports-panel" id="map-reports-panel" aria-label="Báo cáo trên bản đồ" ${mapPanelOpen ? '' : 'hidden'}><div class="map-panel-heading"><div><h1>Khám phá bản đồ</h1><p>${reports.length} báo cáo · ${located.length} có điểm bản đồ</p></div><button class="close-button" data-map-command="close-reports" aria-label="Ẩn danh sách báo cáo">×</button></div><label class="map-category-label" for="map-category-filter">Nhóm hiện tượng</label><select id="map-category-filter">${categories.map(c=>`<option value="${c.id}" ${mapCategory===c.id?'selected':''}>${c.id==='all'?'Tất cả báo cáo':esc(c.label)}</option>`).join('')}</select><div class="map-panel-list" id="map-report-list"></div><div class="map-panel-footer"><small>Điểm đại diện vị trí người quan sát, dữ liệu minh họa.</small><button class="button primary wide" data-action="report">${icon('plus')}Đăng báo cáo</button></div></aside><div class="map-toolbar"><div class="map-mode-switch" aria-label="Góc nhìn bản đồ"><button data-map-mode="globe" class="active" aria-pressed="true">Trái Đất 3D</button><button data-map-mode="terrain" aria-pressed="false">Địa hình 3D</button><button data-map-mode="flat" aria-pressed="false">Bản đồ 2D</button></div><div class="map-navigation"><button class="button" data-map-command="home">${icon('map')}Về Việt Nam</button><a class="button" href="#forum">${icon('chevron')}Diễn đàn</a></div></div><div class="map-status" id="map-status" role="status" aria-live="polite">Đang khởi tạo bản đồ…</div></section>`;
   renderMapList();
   renderRightbar();
   window.ReportMap.mount({
@@ -616,6 +630,8 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (el.dataset.mapCommand) {
+    if (el.dataset.mapCommand === "toggle-reports") setMapPanel(!mapPanelOpen);
+    if (el.dataset.mapCommand === "close-reports") { setMapPanel(false); document.querySelector('[data-map-command="toggle-reports"]')?.focus(); }
     if (el.dataset.mapCommand === "home") window.ReportMap.home();
     if (el.dataset.mapCommand === "retry") window.ReportMap.retry();
     if (el.dataset.mapCommand === "zoom-cluster") { closeModal(); mapClusterZoom?.(); }
@@ -629,6 +645,7 @@ document.addEventListener("click", (e) => {
   if (el.dataset.mapReport) {
     mapSelection = el.dataset.mapReport;
     window.ReportMap.focusReport(mapSelection);
+    if (mapSmallScreen.matches) setMapPanel(false);
     return;
   }
   const id = el.dataset.id,
@@ -756,6 +773,12 @@ document.addEventListener("input", (e) => {
   }
 });
 document.addEventListener("change", (e) => {
+  if (e.target.id === "map-category-filter") {
+    mapCategory = e.target.value;
+    renderMap();
+    document.querySelector('#map-category-filter')?.focus();
+    return;
+  }
   if (e.target.id === "reply-attachments") {
     replyFiles = readFiles(e.target);
     document.querySelector("#reply-files").innerHTML = replyFiles
