@@ -11,6 +11,15 @@ Thiết kế trước dùng nền kem, xanh lá, thẻ bo 16px và banner ảnh 
 - `VISUAL_DENSITY: 6`: danh sách tương đối gọn, chữ nội dung vẫn có khoảng thở.
 - HTML/CSS/JS thuần như prototype hiện tại. Đây là phong cách tùy chỉnh, không mô phỏng một thư viện thiết kế chính thức.
 
+## Trang giới thiệu
+
+- Đối tượng: người Việt tò mò về những hiện tượng chưa rõ và hội đồng cần hiểu nhanh giá trị sản phẩm.
+- `DESIGN_VARIANCE: 7`: hero lệch trái, lưới nhóm bất đối xứng, phần bản đồ và quy trình dùng các nhịp bố cục khác nhau.
+- `MOTION_INTENSITY: 4`: nội dung chỉ hiện nhẹ khi đi vào viewport; tôn trọng thiết lập giảm chuyển động.
+- `VISUAL_DENSITY: 3`: mỗi phần truyền đạt một ý, dùng ảnh lớn và khoảng trống để dẫn mắt.
+- Một màu nhấn cyan, góc 3–4px và nền navy được giữ xuyên suốt giữa landing page và ứng dụng.
+- Bốn ảnh chủ đề chỉ định hướng không khí. Dòng chú thích nói rõ chúng không phải bằng chứng hiện tượng.
+
 ## Các lớp
 
 1. `world-backdrop`: ảnh cảnh phủ viewport. Chuyển ảnh khi xem nhóm hoặc chủ đề tâm linh/kỳ bí.

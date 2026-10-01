@@ -54,7 +54,7 @@ const categories = [
   { id: "sky", label: "Bầu trời / không trung", icon: "sky" },
   { id: "mystery", label: "Tâm linh / kỳ bí", icon: "mystery" },
   { id: "nature", label: "Tự nhiên / môi trường", icon: "nature" },
-  { id: "unknown", label: "Chưa xác định", icon: "unknown" },
+  { id: "unknown", label: "Khác / chưa xác định", icon: "unknown" },
 ];
 const cat = (id) => categories.find((c) => c.id === id) || categories[4];
 const observationLabels = {
@@ -329,21 +329,20 @@ function guideHTML() {
 function topicRow(t) {
   return `<article class="topic-row ${t.isNew ? "new" : ""}"><a href="#thread/${t.id}" class="topic-symbol ${t.type}" aria-label="Mở ${esc(t.title)}">${icon(t.type === "report" ? cat(t.category).icon : "message")}</a><div class="topic-content"><div class="topic-tags"><span class="pill ${t.type}">${t.type === "report" ? "Báo cáo" : "Thảo luận"}</span><span class="pill">${esc(t.kind)}</span>${t.pinned ? `<span class="pill pin">✦ Đáng chú ý</span>` : ""}${t.links?.length ? `<span class="pill">${t.links.length} báo cáo liên kết</span>` : ""}</div><a href="#thread/${t.id}" class="topic-title">${esc(t.title)}</a><p class="topic-excerpt">${esc(t.body)}</p><div class="topic-meta"><span class="avatar mini-avatar">${esc(initials(t.author))}</span><span>${esc(t.author)}</span><span>·</span><span>${esc(t.time)}</span>${t.type === "report" ? `<span>·</span>${icon("pin")}<span>${esc(t.location)}</span>` : ""}</div></div><div class="topic-counts"><span title="Số trả lời">${icon("message")}${t.replies.length}</span><span class="views" title="Lượt xem minh họa">${icon("eye")}${t.views}</span><span class="last">Cập nhật<br>${esc(t.time)}</span></div></article>`;
 }
+const realmFor = (id) => ["mystery", "nature", "unknown"].includes(id) ? id : "sky";
 function forumBanner() {
-  if (!["all", "sky", "mystery"].includes(category)) return "";
-  const mystery = category === "mystery";
-  const heading = mystery
-    ? "Những câu chuyện kỳ bí.<br>Cùng tìm hiểu từ quan sát."
-    : category === "sky"
-      ? "Bạn thấy gì trên bầu trời?<br>Cùng ghi lại và đối chiếu."
-      : "Chưa biết là gì?<br>Bắt đầu từ điều bạn thấy.";
-  const description = mystery
-    ? "Chia sẻ trải nghiệm, đặt câu hỏi và trao đổi những cách giải thích có thể kiểm tra."
-    : "Chia sẻ quan sát có cấu trúc, đối chiếu bằng chứng và cùng đặt những câu hỏi tốt hơn.";
-  return `<section class="hero hero-photo ${mystery ? "hero-mystery" : "hero-sky"}"><img class="hero-image" src="assets/${mystery ? "bg-2.png" : "bg-1.png"}" alt="" width="1672" height="941" fetchpriority="high" decoding="async"><div class="hero-copy"><p class="eyebrow">${mystery ? "TÂM LINH / KỲ BÍ" : "TỪ MỘT QUAN SÁT ĐẾN MỘT CUỘC TRAO ĐỔI"}</p><h2>${heading}</h2><p>${description}</p><button class="text-button hero-link" data-action="create">Chia sẻ quan sát của bạn ${icon("arrow")}</button></div></section>`;
+  const banners = {
+    all: ["bg-1.webp", "Chưa biết là gì?<br>Bắt đầu từ điều bạn thấy.", "Chia sẻ quan sát có cấu trúc, đối chiếu bằng chứng và cùng đặt những câu hỏi tốt hơn."],
+    sky: ["bg-1.webp", "Bạn thấy gì trên bầu trời?<br>Cùng ghi lại và đối chiếu.", "Từ đốm sáng đến UFO/UAP, bắt đầu bằng thời gian, hướng nhìn và những gì bạn thực sự quan sát."],
+    mystery: ["bg-2.webp", "Những câu chuyện kỳ bí.<br>Cùng tìm hiểu từ quan sát.", "Chia sẻ trải nghiệm, đặt câu hỏi và trao đổi những cách giải thích có thể kiểm tra."],
+    nature: ["bg-natural.webp", "Thiên nhiên còn nhiều điều lạ.<br>Cùng quan sát kỹ hơn.", "Ghi nhận ánh sáng, âm thanh, thời tiết hoặc những biến đổi bất thường của môi trường."],
+    unknown: ["bg-other.webp", "Chưa biết xếp vào đâu?<br>Vẫn có thể bắt đầu ghi nhận.", "Mô tả điều bạn thấy, giữ lại bối cảnh và cùng cộng đồng tìm cách lý giải."],
+  };
+  const [image, heading, description] = banners[category] || banners.all;
+  return `<section class="hero hero-photo hero-${realmFor(category)}"><img class="hero-image" src="assets/${image}" alt="" width="1672" height="941" fetchpriority="high" decoding="async"><div class="hero-copy"><p class="eyebrow">${category === "all" ? "TỪ MỘT QUAN SÁT ĐẾN MỘT CUỘC TRAO ĐỔI" : esc(cat(category).label)}</p><h2>${heading}</h2><p>${description}</p><button class="text-button hero-link" data-action="create">Chia sẻ quan sát của bạn ${icon("arrow")}</button></div></section>`;
 }
 function renderForum() {
-  document.body.dataset.realm = category === "mystery" ? "mystery" : "sky";
+  document.body.dataset.realm = realmFor(category);
   const savedView = route() === "saved",
     followedView = route() === "followed";
   const filtered = state.threads.filter(
@@ -418,7 +417,7 @@ function replyHTML(r, i, t) {
   return `<article class="card reply" id="reply-${r.id}"><div class="reply-header"><span class="avatar ${r.author === "Minh Anh" ? "mine" : ""}">${esc(initials(r.author))}</span><div><strong>${esc(r.author)}</strong>${r.author === t.author ? '<span class="pill" style="margin-left:6px">Tác giả</span>' : ""}<small>${esc(r.time)}</small></div><a class="reply-number" href="#reply-${r.id}">#${i + 1}</a></div>${r.quote ? `<blockquote>${esc(r.quote)}</blockquote>` : ""}<div class="prose">${paragraphs(r.body)}</div>${r.diagram ? `<div class="art-evidence" role="img" aria-label="Sơ đồ hướng nhìn minh họa: hai vị trí quan sát với hướng khác nhau"><svg viewBox="0 0 370 120"><path d="M0 87Q80 60 120 93T240 75T370 88" fill="none" stroke="#d7e0cc" stroke-width="22"/><path d="m90 72 95-36M233 74l52-45" stroke="#718b57" stroke-width="2" stroke-dasharray="5 4"/><circle cx="90" cy="72" r="6" fill="#486a40"/><circle cx="233" cy="74" r="6" fill="#a58952"/><text x="66" y="103" fill="#5e7552" font-size="10">#102 · Mỹ Khê</text><text x="194" y="104" fill="#8e7b55" font-size="10">#108 · Thuận Phước</text><text x="145" y="22" fill="#899779" font-size="9">Hướng theo lời kể, cần kiểm tra lại</text></svg><span class="art-label">SƠ ĐỒ MINH HỌA</span></div><div class="attachment">${icon("file")}<div>doi-chieu-huong-nhin.png<small>Hình đối chiếu · Minh họa cho prototype</small></div></div>` : ""}${(r.media || []).map(mediaHTML).join("")}<div class="reply-footer"><button class="text-button ${state.liked.includes(r.id) ? "active" : ""}" data-action="useful" data-reply="${r.id}" data-id="${t.id}">${icon("check")}Hữu ích · ${(r.useful || 0) + (state.liked.includes(r.id) ? 1 : 0)}</button><button class="text-button" data-action="quote" data-reply="${r.id}" data-id="${t.id}">${icon("quote")}Trích dẫn</button><button class="text-button" data-action="flag" data-target="${r.id}">${icon("flag")}Báo vi phạm</button></div></article>`;
 }
 function renderThread(t) {
-  document.body.dataset.realm = t?.category === "mystery" ? "mystery" : "sky";
+  document.body.dataset.realm = realmFor(t?.category);
   if (!t) {
     document.querySelector("#main").innerHTML =
       '<div class="empty"><h2>Không tìm thấy chủ đề</h2><p>Chủ đề này không có trong dữ liệu mẫu.</p><a href="#forum" class="button">Về diễn đàn</a></div>';
@@ -477,6 +476,10 @@ function renderMap() {
 
 function render() {
   const r = route();
+  if (r.startsWith("forum/")) {
+    const requested = r.split("/")[1];
+    if (categories.some(c => c.id === requested)) category = requested;
+  }
   document.body.classList.toggle("map-route", r.startsWith("map"));
   if (!r.startsWith("map")) window.ReportMap?.unmount();
   document
@@ -497,6 +500,7 @@ function render() {
     }
     renderMap();
   } else renderForum();
+  if (r === "report") openReport();
 }
 
 function openModal(title, html) {

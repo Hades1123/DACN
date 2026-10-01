@@ -1,12 +1,12 @@
 # Prototype diễn đàn Dị thường
 
-Mở `index.html` bằng trình duyệt để xem diễn đàn và địa cầu tổng quan. Không cần build hoặc cài thư viện. **Để thử đầy đủ bản đồ đường phố và địa hình, nên chạy qua HTTP:**
+Mở `landing.html` để xem trang giới thiệu, hoặc `index.html` để đi thẳng vào diễn đàn và địa cầu tổng quan. Không cần build hoặc cài thư viện. **Để thử đầy đủ bản đồ đường phố và địa hình, nên chạy qua HTTP:**
 
 ```bash
-python3 -m http.server 8000 --directory frontend
+python3 -m http.server 8000 --directory prototype
 ```
 
-Sau đó mở `http://localhost:8000`.
+Sau đó mở `http://localhost:8000/landing.html`.
 
 Đường phố chỉ được yêu cầu khi chạy qua HTTP/HTTPS, để trình duyệt gửi Referer đúng với yêu cầu của nguồn tile. Không có tải tile hàng loạt hoặc tính năng tải đường phố để dùng ngoại tuyến.
 
@@ -35,6 +35,7 @@ Sau đó mở `http://localhost:8000`.
 ## Tệp
 
 - `index.html`: khung trang.
+- `landing.html`, `landing.css`, `landing.js`: trang giới thiệu sản phẩm, giao diện responsive và menu mobile.
 - `styles.css`: thiết kế, responsive, các hình minh họa.
 - `theme.css`: phong cách navy/cyan, vật liệu tối, các lớp cảnh và giao diện.
 - `DESIGN.md`: hướng thiết kế và cách tổ chức các lớp.
@@ -44,10 +45,15 @@ Sau đó mở `http://localhost:8000`.
 - `vendor/maplibre`: bản thư viện cố định và giấy phép.
 - `assets/maps/world-land.js`: dữ liệu địa lý local; dùng JavaScript để mở HTML trực tiếp cũng nạp được.
 - `assets/logo.png`: logo ở thanh đầu trang và favicon.
+- `assets/logo-ui.webp`: bản logo nhỏ cho giao diện landing page; giữ nguyên thiết kế logo gốc.
 - `assets/bg-1.png`: banner diễn đàn và nhóm bầu trời / không trung.
 - `assets/bg-2.png`: banner nhóm tâm linh / kỳ bí. Hai ảnh nền dùng để trang trí, không gắn vào báo cáo như bằng chứng.
+- `assets/bg-natural.png`: banner nhóm tự nhiên / môi trường.
+- `assets/bg-other.png`: banner nhóm khác / chưa xác định.
+- `assets/map-preview.png`: ảnh chụp giao diện địa cầu của chính prototype dùng trên trang giới thiệu.
+- Các bản `.webp` dùng khi hiển thị để giảm dung lượng tải; ảnh `.png` gốc vẫn được giữ lại.
 - `assets/foreground-frame.png`: tiền cảnh trong suốt, đá/cành khô và sương cyan ở mép dưới. Tạo bằng công cụ imagegen, chỉ dùng trang trí.
 
 ## Giao diện nhiều lớp
 
-Cảnh nền, lớp tối, ánh sáng/sương, texture và tiền cảnh được ghép riêng bằng CSS. Khi chọn nhóm hoặc mở chủ đề **Tâm linh / kỳ bí**, cảnh toàn màn hình chuyển sang `bg-2.png`. Các lớp trang trí không nhận chuột và không chặn nút; trên mobile giảm độ nổi của tiền cảnh, bỏ texture nhiễu. Tất cả trang, biểu mẫu và bản đồ mẫu dùng chung phong cách tối.
+Cảnh nền, lớp tối, ánh sáng/sương, texture và tiền cảnh được ghép riêng bằng CSS. Cảnh toàn màn hình và banner chuyển theo nhóm: bầu trời, tâm linh/kỳ bí, tự nhiên/môi trường và khác/chưa xác định. Các lớp trang trí không nhận chuột và không chặn nút; trên mobile giảm độ nổi của tiền cảnh, bỏ texture nhiễu. Landing page, diễn đàn, biểu mẫu và bản đồ dùng chung phong cách tối.
