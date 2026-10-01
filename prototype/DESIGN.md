@@ -22,6 +22,8 @@ Thiết kế trước dùng nền kem, xanh lá, thẻ bo 16px và banner ảnh 
 
 ## Các lớp
 
+Trang đăng nhập và đăng ký dùng ảnh riêng với phần cảnh nằm bên trái, form bên phải. Form dùng cùng màu navy/cyan và góc nhỏ như ứng dụng. Trên mobile, phần chữ giới thiệu ẩn để ưu tiên thao tác; ảnh vẫn làm nền với lớp tối tăng độ tương phản. OTP dùng một ô sáu chữ số hỗ trợ bàn phím số, dán mã và autofill, tránh việc phải di chuyển giữa sáu ô. Hộp chọn tài khoản Google ghi rõ đây là mô phỏng.
+
 1. `world-backdrop`: ảnh cảnh phủ viewport. Chuyển ảnh khi xem nhóm hoặc chủ đề tâm linh/kỳ bí.
 2. `world-shade`: lớp tối để tách cảnh khỏi nội dung.
 3. `world-haze`: ánh sáng/sương cyan bằng CSS.

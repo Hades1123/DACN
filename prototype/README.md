@@ -12,6 +12,7 @@ Sau đó mở `http://localhost:8000/landing.html`.
 
 ## Luồng nên xem
 
+**Landing → Đăng nhập / Đăng ký**: thử username/mật khẩu hoặc Google minh họa, rồi nhập OTP `123456`. Có kiểm tra biểu mẫu, hiện/ẩn mật khẩu, mã sai, hết hạn 5 phút, chờ 30 giây để gửi lại và giới hạn 5 lần nhập sai. Nút Google mở hộp chọn tài khoản mẫu, chưa kết nối Google thật.
 1. **Diễn đàn → Ba báo cáo đốm sáng ở Đà Nẵng**: chủ đề riêng có bài mở đầu, tóm tắt hiện tại, ba báo cáo dẫn chiếu và trả lời kèm sơ đồ đối chiếu.
 2. Mở một báo cáo dẫn chiếu: xem dữ liệu có cấu trúc và luồng trả lời của chính báo cáo. Nút **Mở chủ đề có báo cáo này** điền sẵn liên kết trong biểu mẫu chủ đề mới.
 3. **Tạo nội dung → Mở chủ đề thảo luận**: chọn mục đích, viết câu hỏi, chọn nhiều báo cáo, đính kèm tệp và đăng.
@@ -36,6 +37,7 @@ Sau đó mở `http://localhost:8000/landing.html`.
 
 - `index.html`: khung trang.
 - `landing.html`, `landing.css`, `landing.js`: trang giới thiệu sản phẩm, giao diện responsive và menu mobile.
+- `login.html`, `register.html`, `auth.css`, `auth.js`: giao diện và luồng xác thực mô phỏng. Hai ảnh `login.png`, `register.png` có bản WebP dùng khi hiển thị.
 - `styles.css`: thiết kế, responsive, các hình minh họa.
 - `theme.css`: phong cách navy/cyan, vật liệu tối, các lớp cảnh và giao diện.
 - `DESIGN.md`: hướng thiết kế và cách tổ chức các lớp.
@@ -57,3 +59,11 @@ Sau đó mở `http://localhost:8000/landing.html`.
 ## Giao diện nhiều lớp
 
 Cảnh nền, lớp tối, ánh sáng/sương, texture và tiền cảnh được ghép riêng bằng CSS. Cảnh toàn màn hình và banner chuyển theo nhóm: bầu trời, tâm linh/kỳ bí, tự nhiên/môi trường và khác/chưa xác định. Các lớp trang trí không nhận chuột và không chặn nút; trên mobile giảm độ nổi của tiền cảnh, bỏ texture nhiễu. Landing page, diễn đàn, biểu mẫu và bản đồ dùng chung phong cách tối.
+
+## Giới hạn của trang xác thực
+
+- Đăng nhập chấp nhận tên hợp lệ và mật khẩu đúng định dạng để thử giao diện; chưa kiểm tra tài khoản hay mật khẩu với máy chủ.
+- OTP mẫu cố định `123456`, không gửi email thật. Đăng ký dùng email người nhập; đăng nhập và Google dùng email mẫu `minhanh@example.com`.
+- Google được mô phỏng bằng hộp chọn tài khoản; OTP sau Google minh họa bước xác thực bổ sung. Chưa có OAuth redirect, token, xác thực email hay bảo vệ phiên từ máy chủ.
+- Chỉ thông tin phiên minh họa và bước OTP đang chờ được giữ trong `sessionStorage`. Không lưu mật khẩu. Tùy chọn nhớ tên đăng nhập chỉ lưu tên trong `localStorage`.
+- Phiên này phục vụ demo các màn hình xác thực; tác giả, quyền thao tác và nội dung diễn đàn vẫn dùng tài khoản mẫu Minh Anh.

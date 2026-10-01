@@ -712,7 +712,10 @@ document.addEventListener("click", (e) => {
       render();
       break;
     case "profile":
-      toast("Bạn đang dùng tài khoản mẫu Minh Anh.");
+      openModal(
+        "Tài khoản trong bản thử",
+        '<p class="modal-intro">Diễn đàn đang dùng tài khoản mẫu Minh Anh. Bạn có thể thử riêng luồng đăng nhập, đăng ký bằng mật khẩu hoặc Google và xác thực OTP.</p><div class="detail-actions"><a class="button primary" href="login.html">Đăng nhập</a><a class="button" href="register.html">Đăng ký</a></div>',
+      );
       break;
     case "about":
       openModal(
